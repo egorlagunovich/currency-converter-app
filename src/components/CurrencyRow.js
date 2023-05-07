@@ -1,8 +1,8 @@
 import React from "react";
 
 export default function CurrencyRow() {
+  
   return (
-
       <div className="flex flex-row items-center justify-center mb-7 rounded-xl md:text-lg text-md">
         <div>
           <input
