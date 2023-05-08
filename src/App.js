@@ -3,7 +3,8 @@ import CurrencyRow from "./components/CurrencyRow";
 import Footer from "./components/Footer";
 
 function App() {
-  const [currencyOptions, setCurrencyOptions] = useState();
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [currentDate, setCurrentDate] = useState();
   const myHeaders = new Headers();
   myHeaders.append("apikey", "UQ1pMFSPWw4PRBYpVacLVt8EBz1B99aT");
   const requestOptions = {
@@ -12,9 +13,15 @@ function App() {
     headers: myHeaders,
   };
   useEffect(() => {
-    fetch("https://api.apilayer.com/exchangerates_data/symbols", requestOptions)
+    fetch(
+      "https://api.apilayer.com/exchangerates_data/latest?symbols=JPY%2C%20GBP%2C%20USD%2C%20BYN%2C%20PLN%2C%20EUR&base=EUR",
+      requestOptions
+    )
       .then((response) => response.json())
-      .then((result) => setCurrencyOptions(result.symbols))
+      .then((result) => {
+        setCurrencyOptions([...Object.keys(result.rates)]);
+        setCurrentDate(result.date);
+      })
       .catch((error) => console.log("error", error));
   }, []);
   return (
@@ -27,9 +34,9 @@ function App() {
           <h2 className="md:text-xl text-3xl text-gray-700">
             1 usd is 0.9 euro
           </h2>
-          <p className=" text-gray-700 mb-5">Time</p>
-          <CurrencyRow />
-          <CurrencyRow />
+          <p className=" text-gray-700 mb-5">{currentDate}</p>
+          <CurrencyRow currencyOptions={currencyOptions} />
+          <CurrencyRow currencyOptions={currencyOptions} />
         </div>
       </div>
       <Footer />
